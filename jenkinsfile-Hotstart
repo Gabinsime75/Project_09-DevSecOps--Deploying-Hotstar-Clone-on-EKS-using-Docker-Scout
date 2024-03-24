@@ -92,5 +92,17 @@ pipeline {
                 sh "docker run -d --name hotstar -p 3000:3000 gabin75/hotstar:latest"
             }
         }
+
+        stage('Deploy to kubernets') {
+            steps {
+                script{
+                    dir('K8S'){
+                        withKubeConfig(caCertificate: '', clusterName: 'EKS_CLOUD', contextName: 'arn:aws:eks:us-east-2:303319466234:cluster/EKS_CLOUD', credentialsId: 'k8s', namespace: 'Default', restrictKubeConfigAccess: false, serverUrl: 'https://E340D202FA3ADA591CDCAA154C56BE7A.gr7.us-east-2.eks.amazonaws.com')
+                        sh 'kubectl apply -f deployment.yml'
+                        sh 'kubectl apply -f service.yml'
+                    }
+                }
+            }
+        }
     }
 }
