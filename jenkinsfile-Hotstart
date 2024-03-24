@@ -67,9 +67,9 @@ pipeline {
             steps {
                 script{
                     withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){
-                        sh "docker build -t hotstar2 ."
-                        sh "docker tag hotstar gabin75/hotstar2:latest "
-                        sh "docker push gabin75/hotstar2:latest"
+                        sh "docker build -t hotstar1 ."
+                        sh "docker tag hotstar gabin75/hotstar1:latest "
+                        sh "docker push gabin75/hotstar1:latest"
                     }
                 }
             }
@@ -79,9 +79,9 @@ pipeline {
             steps {
                 script{
                     withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
-                        sh 'docker-scout quickview gabin75/hotstar2:latest'
-                        sh 'docker-scout cves gabin75/hotstar2:latest'
-                        sh 'docker-scout recommendations gabin75/hotstar2:latest'
+                        sh 'docker-scout quickview gabin75/hotstar1:latest'
+                        sh 'docker-scout cves gabin75/hotstar1:latest'
+                        sh 'docker-scout recommendations gabin75/hotstar1:latest'
                     }
                 }
             }
@@ -89,7 +89,7 @@ pipeline {
 
         stage('deploy_docker') {
             steps {
-                sh "docker run -d --name hotstar2 -p 3000:3000 gabin75/hotstar2:latest"
+                sh "docker run -d --name hotstar1 -p 3001:3001 gabin75/hotstar1:latest"
             }
         }
 
