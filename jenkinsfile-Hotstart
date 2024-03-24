@@ -67,9 +67,9 @@ pipeline {
             steps {
                 script{
                     withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){
-                        sh "docker build -t hotstar1 ."
-                        sh "docker tag hotstar gabin75/hotstar1:latest "
-                        sh "docker push gabin75/hotstar1:latest"
+                        sh "docker build -t hotstar3 ."
+                        sh "docker tag hotstar gabin75/hotstar3:latest "
+                        sh "docker push gabin75/hotstar3:latest"
                     }
                 }
             }
@@ -79,9 +79,9 @@ pipeline {
             steps {
                 script{
                     withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
-                        sh 'docker-scout quickview gabin75/hotstar1:latest'
-                        sh 'docker-scout cves gabin75/hotstar1:latest'
-                        sh 'docker-scout recommendations gabin75/hotstar1:latest'
+                        sh 'docker-scout quickview gabin75/hotstar3:latest'
+                        sh 'docker-scout cves gabin75/hotstar3:latest'
+                        sh 'docker-scout recommendations gabin75/hotstar3:latest'
                     }
                 }
             }
@@ -89,7 +89,7 @@ pipeline {
 
         stage('deploy_docker') {
             steps {
-                sh "docker run -d --name hotstar1 -p 3001:3001 gabin75/hotstar1:latest"
+                sh "docker run -d --name hotstar3 -p 3002:3002 gabin75/hotstar3:latest"
             }
         }
 
@@ -97,9 +97,10 @@ pipeline {
             steps {
                 script{
                     dir('K8S'){
-                        withKubeConfig(caCertificate: '', clusterName: 'EKS_CLOUD', contextName: 'arn:aws:eks:us-east-2:303319466234:cluster/EKS_CLOUD', credentialsId: 'k8s', namespace: 'Default', restrictKubeConfigAccess: false, serverUrl: 'https://E340D202FA3ADA591CDCAA154C56BE7A.gr7.us-east-2.eks.amazonaws.com')
-                        sh 'kubectl apply -f deployment.yml'
-                        sh 'kubectl apply -f service.yml'
+                        withKubeConfig(caCertificate: '', clusterName: 'EKS_CLOUD', contextName: 'arn:aws:eks:us-east-2:303319466234:cluster/EKS_CLOUD', credentialsId: 'k8s', namespace: 'Default', restrictKubeConfigAccess: false, serverUrl: 'https://E340D202FA3ADA591CDCAA154C56BE7A.gr7.us-east-2.eks.amazonaws.com'){
+                            sh 'kubectl apply -f deployment.yml'
+                            sh 'kubectl apply -f service.yml'
+                        }
                     }
                 }
             }
